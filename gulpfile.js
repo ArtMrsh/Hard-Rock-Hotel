@@ -90,9 +90,17 @@ gulp.task('html', function() {
     .pipe(gulp.dest(config.dist))
 });
 
-gulp.task('others', function () {
-   return gulp.src(['src/libs/**/*.*', 'src/fonts/**/*.*', 'src/docs/**/*.*'])
-      .pipe(gulp.dest(config.dist))
+gulp.task('libs', function () {
+   return gulp.src('src/libs/**')
+      .pipe(gulp.dest('dist/libs'))
+});
+gulp.task('docs', function () {
+   return gulp.src('src/docs/**')
+      .pipe(gulp.dest('dist/docs'))
+});
+gulp.task('fonts', function () {
+   return gulp.src('src/fonts/**')
+      .pipe(gulp.dest('dist/fonts'))
 });
 
 gulp.task('clean', function() {
@@ -100,7 +108,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', function() {
-    sequence('clean', ['html', 'css', 'img', 'js', 'others']);
+    sequence('clean', ['html', 'css', 'img', 'js', 'libs', 'fonts', 'docs']);
 });
 
 gulp.task('default', ['serve']);

@@ -117,7 +117,7 @@ function showRooms(room) {
       `
 }
 
-function parseRooms(type) {
+function parseRooms(arr) {
    type = lastPathSegment;
    if(type !== 'rooms.html'){
       roomsArray = roomsArray.filter(room => {
@@ -125,11 +125,11 @@ function parseRooms(type) {
       })
    }
 
-   document.querySelector(".rooms").innerHTML = `${roomsArray.map(showRooms).join('')}`;
+   document.querySelector(".rooms").innerHTML = `${arr.map(showRooms).join('')}`;
 
-   const popupForm = document.querySelector(".booking__popup");
    const bookRoomBtns = document.querySelectorAll(".room__book");
    bookRoomBtns.forEach(btn => btn.addEventListener('click', e => {
+      const popupForm = document.querySelector(".booking__popup");
       popupForm.classList.add('popup-active');
       let selectedRoom = document.querySelector(".selected-room");
       selectedRoom.innerHTML = e.target.dataset.type;
@@ -140,6 +140,7 @@ function parseRooms(type) {
          format: 'yyyy / mm / dd'
       });
       from_picker = from_$input.pickadate('picker');
+
       const departureField = $('.departure-picker');
       const to_$input = departureField.pickadate({
             format: 'yyyy / mm / dd'
@@ -162,6 +163,7 @@ function parseRooms(type) {
             to_picker.set('min', false)
          }
       })
+      let diffDays;
       to_picker.on('set', function(event) {
          if (event.select) {
             from_picker.set('max', to_picker.get('select'))
@@ -173,7 +175,7 @@ function parseRooms(type) {
          let firstDate = new Date(`${arriveField.val()}`);
          let secondDate = new Date(`${departureField.val()}`);
 
-         let diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+         diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
 
          if(!isNaN(diffDays)){
             let priceField = document.querySelector(".final-price");
@@ -184,38 +186,39 @@ function parseRooms(type) {
             }
          }
 
-         //form submitting
-         const mainBookingForm = document.querySelector(".main-booking");
-         submitMainBookingForm = function(e) {
-            e.preventDefault();
-            let adultsCount = document.querySelector(".adult-count");
-            adultsCount = adultsCount.options[adultsCount.selectedIndex].value;
-            let childrenCount = document.querySelector(".children-count");
-            childrenCount = childrenCount.options[childrenCount.selectedIndex].value;
+      })
+      //form submitting
+      const mainBookingForm = document.querySelector(".main-booking");
+      submitMainBookingForm = function(e) {
+         console.log(diffDays);
+         e.preventDefault();
+         let adultsCount = document.querySelector(".adult-count");
+         adultsCount = adultsCount.options[adultsCount.selectedIndex].value;
+         let childrenCount = document.querySelector(".children-count");
+         childrenCount = childrenCount.options[childrenCount.selectedIndex].value;
 
-            const bookingObj = {
-               "Номер" : selectedRoom.innerHTML,
-               "Дата заїзду": arriveField.val(),
-               "Дата виїзду": departureField.val(),
-               "Днів проживання": diffDays,
-               "Кількість дорослих": adultsCount,
-               "Кількість дітей": childrenCount,
-               "Сформована ціна": document.querySelector(".final-price").innerHTML
-            }
-            console.log(bookingObj);
-            // Send booking info emulation
-            let serializeObj = JSON.stringify(bookingObj);
-            localStorage.setItem("Заброньовано:", serializeObj);
-            popupForm.classList.remove('popup-active');
-          }
-         mainBookingForm.addEventListener('submit', submitMainBookingForm);
+         const bookingObj = {
+            "Номер" : selectedRoom.innerHTML,
+            "Дата заїзду": arriveField.val(),
+            "Дата виїзду": departureField.val(),
+            "Днів проживання": diffDays,
+            "Кількість дорослих": adultsCount,
+            "Кількість дітей": childrenCount,
+            "Сформована ціна": document.querySelector(".final-price").innerHTML
+         }
+
+         // Send booking info emulation
+         let serializeObj = JSON.stringify(bookingObj);
+         localStorage.setItem("Заброньовано:", serializeObj);
+         popupForm.classList.remove('popup-active');
+       }
+      mainBookingForm.addEventListener('submit', submitMainBookingForm);
+
+      const popupCloseBtn = document.querySelector(".booking__popup-close");
+      popupCloseBtn.addEventListener('click', () => {
+         popupForm.classList.remove('popup-active');
       })
    }))
-
-   const popupCloseBtn = document.querySelector(".booking__popup-close");
-   popupCloseBtn.addEventListener('click', () => {
-      popupForm.classList.remove('popup-active');
-   })
 }
 
 const endpoint = 'http://localhost:3030/api/hotels';
@@ -229,60 +232,76 @@ const promise = fetch(endpoint)
     .then(data => {
       data.forEach(room => {
          roomsArray.push(room);
-         parseRooms();
+         parseRooms(roomsArray);
       })
    })
     .catch(error => {
         // console.log(error);
     });
 
-   // Sorting
-   const sortRadios = document.querySelectorAll(".sort-radio");
-   function sortRooms(e) {
-      if(e.target.id === "sort-count") {
-         roomsArray.sort(function (a, b) {
-            return a.quantity - b.quantity;
-         })
-      }
-      if(e.target.id === "sort-price") {
-         roomsArray.sort(function (a, b) {
-            return a.price - b.price;
-         })
-      }
-      if(e.target.id == "sort-square") {
-         roomsArray.sort(function (a, b) {
-            return a.square - b.square;
-         })
-      }
-      if(e.target.id === "sort-name") {
-         roomsArray.sort(function (a, b) {
-            return a.name > b.name;
-         })
-      }
-      parseRooms();
+// Sorting
+const sortRadios = document.querySelectorAll(".sort-radio");
+function sortRooms(e) {
+   if(e.target.id === "sort-count") {
+      roomsArray.sort(function (a, b) {
+         return a.quantity - b.quantity;
+      })
    }
-   sortRadios.forEach(btn => btn.addEventListener('change', sortRooms));
-// Gallery initialization
-if(lastPathSegment === 'gallery.html') {
-   $("#nanogallery2").nanogallery2({
-      thumbnailHeight:  300,
-      thumbnailWidth:   300,
-      itemsBaseURL:     '../img/',
-      items: [
-         { src: 'gallery_1.jpg', srct: 'gallery_1.jpg', title: '' },
-         { src: 'gallery_2.jpg', srct: 'gallery_2.jpg', title: '' },
-         { src: 'gallery_3.jpg', srct: 'gallery_3.jpg', title: '' },
-         { src: 'gallery_4.jpg', srct: 'gallery_4.jpg', title: '' },
-         { src: 'gallery_5.jpg', srct: 'gallery_5.jpg', title: '' },
-         { src: 'gallery_6.jpg', srct: 'gallery_6.jpg', title: '' },
-         { src: 'gallery_7.jpg', srct: 'gallery_7.jpg', title: '' },
-         { src: 'gallery_8.jpg', srct: 'gallery_8.jpg', title: '' },
-         { src: 'gallery_9.jpg', srct: 'gallery_9.jpg', title: '' },
-         { src: 'gallery_10.jpg', srct: 'gallery_10.jpg', title: '' },
-         { src: 'gallery_11.jpg', srct: 'gallery_11.jpg', title: '' },
-         { src: 'gallery_13.jpg', srct: 'gallery_13.jpg', title: '' },
-         { src: 'gallery_14.jpg', srct: 'gallery_14.jpg', title: '' },
-         { src: 'gallery_15.jpg', srct: 'gallery_15.jpg', title: '' },
-      ]
+   if(e.target.id === "sort-price") {
+      roomsArray.sort(function (a, b) {
+         return a.price - b.price;
+      })
+   }
+   if(e.target.id == "sort-square") {
+      roomsArray.sort(function (a, b) {
+         return a.square - b.square;
+      })
+   }
+   if(e.target.id === "sort-name") {
+      roomsArray.sort(function (a, b) {
+         return a.name > b.name;
+      })
+   }
+   parseRooms(roomsArray);
+}
+sortRadios.forEach(btn => btn.addEventListener('change', sortRooms));
+
+// Searching rooms
+const searchRoomsBtn = document.querySelector(".room-search");
+function search(nameKey, myArray){
+   nameKey = nameKey.toLowerCase();
+   let searchArr = [];
+    for (var i=0; i < myArray.length; i++) {
+      for(var key in myArray[i]){
+         if(String(myArray[i][key]).toLowerCase() === nameKey ){
+            searchArr.push(myArray[i])
+         }
+      }
+    }
+    return searchArr;
+}
+if(searchRoomsBtn){
+   searchRoomsBtn.addEventListener('keyup', e => {
+   let resultObject = search(e.target.value, roomsArray);
+   if(resultObject.length !== 0){
+      parseRooms(resultObject);
+   } else {
+      parseRooms(roomsArray);
+   }
    });
-};
+}
+// Gallery initialization
+let galleryItems = document.querySelectorAll('.gallery-item');
+galleryItems.forEach(item => {
+	item.style.backgroundImage = `url(img/${item.dataset.img})`;
+	item.addEventListener('click', e => {
+		const galleryPopup = document.querySelector('.gallery__popup');
+      const imgContainer = document.querySelector('.popup__img');
+      galleryPopup.classList.add('active');
+		imgContainer.style.backgroundImage = `url(img/${e.target.dataset.img})`;
+
+      document.querySelector(".gallery__popup-close").addEventListener('click', () => {
+         galleryPopup.classList.remove('active');
+      })
+	})
+})

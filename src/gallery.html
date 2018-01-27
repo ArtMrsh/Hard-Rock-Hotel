@@ -7,10 +7,6 @@
    <title>Hotel</title>
    <link rel="stylesheet" href="fonts/ptsans/fonts.css">
    <link rel="stylesheet" href="libs/font_awesome/fontawesome-all.min.css">
-   <link rel="stylesheet" href="libs/slick/slick.css">
-   <link rel="stylesheet" href="libs/slick/slick-theme.css">
-   <link rel="stylesheet" href="libs/calendar/pikaday.css"/>
-   <link rel="stylesheet" href="libs/nanogallery/nanogallery2.min.css">
    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -83,22 +79,20 @@
    <main>
       <div class="section-outer">
          <div class="section-inner">
-            <div id="nanogallery2" data-nanogallery2>
-                  <a href="img/gallery_1.jpg" data-ngThumb="img/gallery_1.jpg"></a>
-                  <a href="img/gallery_2.jpg" data-ngThumb="img/gallery_2.jpg"></a>
-                  <a href="img/gallery_3.jpg" data-ngThumb="img/gallery_3.jpg"></a>
-                  <a href="img/gallery_4.jpg" data-ngThumb="img/gallery_4.jpg"></a>
-                  <a href="img/gallery_5.jpg" data-ngThumb="img/gallery_5.jpg"></a>
-                  <a href="img/gallery_6.jpg" data-ngThumb="img/gallery_6.jpg"></a>
-                  <a href="img/gallery_7.jpg" data-ngThumb="img/gallery_7.jpg"></a>
-                  <a href="img/gallery_8.jpg" data-ngThumb="img/gallery_8.jpg"></a>
-                  <a href="img/gallery_9.jpg" data-ngThumb="img/gallery_9.jpg"></a>
-                  <a href="img/gallery_10.jpg" data-ngThumb="img/gallery_10.jpg"></a>
-                  <a href="img/gallery_11.jpg" data-ngThumb="img/gallery_11.jpg"></a>
-                  <a href="img/gallery_13.jpg" data-ngThumb="img/gallery_13.jpg"></a>
-                  <a href="img/gallery_14.jpg" data-ngThumb="img/gallery_14.jpg"></a>
-                  <a href="img/gallery_15.jpg" data-ngThumb="img/gallery_15.jpg"></a>
-              </div>
+            <div class="gallery">
+               <div class="gallery-item" data-img="gallery_1.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_2.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_3.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_4.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_5.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_6.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_7.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_8.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_9.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_10.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_11.jpg"></div>
+            	<div class="gallery-item" data-img="gallery_12.jpg"></div>
+            </div>
          </div>
       </div>
    </main>
@@ -153,11 +147,17 @@
          <p class="copyright">Всі права захищено</p>
       </div>
    </footer>
+   <div class="gallery__popup">
+      <div class="popup__img">
+         <div class="gallery__popup-close">
+            <i class="fas fa-times"></i>
+         </div>
+      </div>
+   </div>
 <script src="libs/jquery/jquery-3.2.1.min.js"></script>
 <script src="libs/slick/slick.min.js"></script>
 <script src="libs/calendar/moment.js"></script>
 <script src="libs/calendar/pikaday.js"></script>
-<script src="libs/nanogallery/jquery.nanogallery2.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
