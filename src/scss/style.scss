@@ -21,11 +21,11 @@
    a {
       text-decoration: none;
    }
-   .clearfix {
-      content: " ";
-      display: block;
-      clear: both;
-   }
+}
+.clearfix::after {
+   content: " ";
+   display: block;
+   clear: both;
 }
 .section-outer {
    width: 100%;
@@ -44,21 +44,42 @@
    background-color: $black;
    border-bottom: 1px solid $sand;
 
-   .topline__email, .topline__number {
-      display: inline-block;
-      font-size: 14px;
-      a {
-         color: $white;
+   .topline-contacts {
+      float: left;
+      @include mobile {
+         float: none;      
+      }
+      .topline__email, .topline__number {
+         display: inline-block;
+         font-size: 14px;
+         a {
+            color: $white;
+         }
+      }
+
+      .topline__email {
+         margin-right: 10px;
+      }
+
+      .fa-envelope, .fa-phone {
+         color: $sand;
+         margin-right: 5px;
       }
    }
-
-   .topline__email {
-      margin-right: 10px;
-   }
-
-   .fa-envelope, .fa-phone {
+   .login {
+      display: block;
+      float: right;
       color: $sand;
-      margin-right: 5px;
+      @include mobile {
+         float: none;
+         display: block;
+         text-align: center;
+         margin-top: 10px;
+      }
+      text-transform: uppercase;
+      .fa-sign-in-alt {
+         padding-right: 5px;
+      }
    }
 }
 .header__main-outer {
@@ -223,69 +244,6 @@
       }
    }
 }
-.form-wrap {
-   position: relative;
-}
-.main-booking {
-   position: absolute;
-   top: 50px;
-   left: 0;
-   z-index: 5;
-   background-color: $blackblur;
-   max-width: 270px;
-   padding: 20px;
-   @include tablet {
-      top: 0;
-      left: 0;
-      right: 0;
-      max-width: 100%;
-   }
-   .arrive-picker, .departure-picker {
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid $sand;
-      background-color: $white;
-      margin-bottom: 20px;
-      font-size: 16px;
-      color: $black;
-      font-weight: bold;
-      border-radius: 3px;
-      position: relative;
-      background-image: url(../img/calendar.png);
-      background-size: 30px;
-      background-repeat: no-repeat;
-      background-position: 95% center;
-      cursor: pointer;
-   }
-   .adult-count {
-      margin-right: 10px;
-   }
-   .adult-count, .children-count {
-      width: 33px;
-      height: 20px;
-      border: 1px solid $black;
-   }
-   .booking-submit {
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      border-radius: 3px;
-      background-color: $sand;
-      border: 0;
-      cursor: pointer;
-      color: $white;
-      text-transform: uppercase;
-      font-weight: bold;
-      font-size: 16px;
-      margin-top: 25px;
-      transition: all .3s ease;
-      &:hover {
-         color: $sand;
-         background-color: $white;
-      }
-   }
-}
 .slider-wrap {
 	max-width: 1200px;
 	width: 100%;
@@ -326,13 +284,6 @@
          .slider_4 {
             background-image: url(../img/main_hotel4.jpg);
          }
-         // img {
-         //    flex-basis: 100%;
-         // 	width: 100%;
-         // 	height: auto;
-         // 	max-width: 1200px;
-         // 	max-height: 600px;
-         // }
       }
       .slider-control {
          height: 30px;
@@ -519,7 +470,8 @@
       }
    }
 }
-.booking__popup {
+
+.popup {
    display: none;
    width: 100vw;
    height: 100vh;
@@ -528,13 +480,63 @@
    z-index: 10;
    top: 0;
    left: 0;
-   .rooms-booking {
-      padding: 45px 20px 20px 20px;
+   .popup-form {
       position: relative;
+      padding: 45px 20px 20px 20px;
       background-color: $white;
       margin: auto;
-      color: $black;
-      .booking__popup-close {
+      max-width: 310px;
+      top: 50px;
+      box-sizing: border-box;
+      .form-field {
+         width: 100%;
+         padding: 10px;
+         box-sizing: border-box;
+         border: 1px solid $sand;
+         background-color: $white;
+         margin-bottom: 10px;
+         font-size: 16px;
+         color: $black;
+         font-weight: bold;
+         border-radius: 3px;
+      }
+      .arrive-picker, .departure-picker {
+         position: relative;
+         background-image: url(../img/calendar.png);
+         background-size: 30px;
+         background-repeat: no-repeat;
+         background-position: 95% center;
+         cursor: pointer;
+      }
+      .adult-count {
+         margin-right: 10px;
+      }
+      .adult-count, .children-count {
+         width: 33px;
+         height: 20px;
+         border: 1px solid $black;
+      }
+      .submit-button {
+         width: 100%;
+         padding: 10px;
+         box-sizing: border-box;
+         border-radius: 3px;
+         background-color: $sand;
+         border: 0;
+         cursor: pointer;
+         color: $white;
+         text-transform: uppercase;
+         font-weight: bold;
+         font-size: 16px;
+         margin-top: 25px;
+         margin-bottom: 10px;
+         transition: all .3s ease;
+         &:hover {
+            color: $sand;
+            background-color: $white;
+         }
+      }
+      .popup-close {
          text-transform: uppercase;
          color: $black;
          font-size: 20px;
@@ -543,6 +545,30 @@
          top: 10px;
          cursor: pointer;
       }
+   }
+   #login {
+      display: none;
+   }
+   #login.active {
+      display: block;
+   }
+   #registration {
+      display: none;
+   }
+   #registration.active {
+      display: block;
+   }
+   .login__text {
+      color: $black;
+      .login__redirect {
+         color: blue;
+         &:hover {
+            text-decoration: underline;
+         }
+      }
+   }
+   .rooms-booking {
+      color: $black;
       .selected-room {
          margin-bottom: 10px;
          text-transform: uppercase;
@@ -555,6 +581,12 @@
          margin-top: 10px;
       }
    }
+}
+.login-popup {
+   @extend .popup;
+}
+.login-popup.active {
+   display: block;
 }
 .popup-active {
    display: block;

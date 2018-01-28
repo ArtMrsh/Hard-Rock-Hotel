@@ -18,8 +18,8 @@
    <header>
       <div class="section-outer">
          <div class="header__topline">
-            <div class="section-inner">
-               <ul>
+            <div class="section-inner clearfix">
+               <ul class="topline-contacts">
                   <li class="topline__email">
                      <a href="mailto:blabla@gmail.com"><i class="far fa-envelope"></i>blabla@gmail.com</a>
                   </li>
@@ -27,6 +27,7 @@
                      <a href="tel:066-666-66-66"><i class="fas fa-phone"></i>066-666-66-66</a>
                   </li>
                </ul>
+               <a class="login" href="#"><i class="fas fa-sign-in-alt"></i>Login</a>
             </div>
          </div>
       </div>
@@ -141,12 +142,12 @@
          <p class="copyright">Всі права захищено</p>
       </div>
    </footer>
-   <div class="booking__popup">
-      <form class="main-booking rooms-booking" method="<post></post>">
-         <div class="booking__popup-close"><i class="fas fa-times"></i></div>
+   <div class="popup">
+      <form class="popup-form main-booking rooms-booking">
+         <div class="popup-close"><i class="fas fa-times"></i></div>
          <p class="selected-room"></p>
-         <input name="arrive" type="text" class="arrive-picker" placeholder="Дата приїзду">
-         <input name="departure" type="text" class="departure-picker" placeholder="Дата відправлення">
+         <input name="arrive" type="text" class="form-field arrive-picker" placeholder="Дата приїзду">
+         <input name="departure" type="text" class="form-field departure-picker" placeholder="Дата відправлення">
          <label>К-ть дорослих:</label>
          <select class="adult-count" name="adults">
             <option value="1">1</option>
@@ -161,8 +162,12 @@
             <option value="2">2</option>
             <option value="3">3</option>
          </select>
-         <button class="booking-submit" type="submit">Забронювати</button>
+         <p class="final-price"></p>
+         <button class=" submit-button booking-submit" type="submit">Забронювати</button>
       </form>
+   </div>
+   <div class="login-popup">
+
    </div>
 <script src="libs/jquery/jquery-3.2.1.min.js"></script>
 <script src="libs/slick/slick.min.js"></script>

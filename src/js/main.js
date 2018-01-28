@@ -1,4 +1,4 @@
-// Slider initialization
+// Sliders initialization
 $(document).ready(function() {
    $('.conferenceroom__slider').slick({
       slidesToShow: 1,
@@ -21,8 +21,7 @@ $(document).ready(function() {
      dots: true,
      centerMode: true,
      focusOnSelect: true
-  });
-
+  })
 });
 
 // index.html slider
@@ -61,6 +60,76 @@ const searchBtn = document.querySelector(".search-submit");
 searchBtn.addEventListener("click", e => {
    e.preventDefault();
 })
+
+// Login popupForm
+const loginFormBtn = document.querySelector('.login');
+const loginPopup = document.querySelector('.login-popup');
+loginFormBtn.addEventListener('click', e => {
+   e.preventDefault();
+   loginPopup.classList.add('active');
+   loginPopup.innerHTML = `
+   <form class="popup-form active" action="" id="login">
+      <div data-form="login" class="popup-close"><i class="fas fa-times"></i></div>
+      <input class="form-field login__name" type="text" placeholder="Введіть ім'я">
+      <input class="form-field login__password" type="password" placeholder="Введіть пароль">
+      <button class="submit-button submit__login">login</button>
+      <p class="login__text">Не маєте аккаунта? <a class="login__redirect" href="#">Зареєструватись</a></p>
+   </form>
+   <form class="popup-form" action="" id="registration">
+      <div data-form="login" class="popup-close"><i class="fas fa-times"></i></div>
+      <input class="form-field registration__name" type="text" placeholder="Введіть ім'я">
+      <input class="form-field registration__password" type="password" placeholder="Введіть пароль">
+      <input class="form-field registration__email" type="email" placeholder="Введіть email">
+      <button class="submit-button submit__registration">Зареєструватись</button>
+      <p class="login__text">Уже зареєстровані? <a class="login__redirect" href="#">Увійти</a></p>
+   </form>
+   `
+   popupClosing();
+
+   const redirectLink = document.querySelectorAll(".login__redirect");
+   redirectLink.forEach(el => el.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector('#login').classList.toggle('active');
+      document.querySelector("#registration").classList.toggle('active');
+   }))
+
+   // Registration
+   // const registrationForm = document.getElementById('registration');
+   // registrationForm.addEventListener('submit', e => {
+   //    e.preventDefault();
+   //    let regName = document.querySelector(".registration__name").value;
+   //    let regPassword = document.querySelector(".registration__password").value;
+   //    let regEmail = document.querySelector(".registration__email").value;
+   //    let clientObj = {
+   //       name : regName,
+   //       password: regPassword,
+   //       email: regEmail
+   //    };
+   //    let clientsArr = [];
+   //    clientsArr = JSON.parse(localStorage.getItem('Користувачі')) || [];
+   //    if(!clientsArr) {
+   //       localStorage.setItem('Користувачі', JSON.stringify(clientObj));
+   //    } else {
+   //       console.log(clientsArr);
+   //       clientsArr.push(recivedData);
+   //       clientsArr.push(clientObj);
+   //       localStorage.setItem('Користувачі', JSON.stringify(clientsArr));
+   //    }
+   // })
+})
+
+const popupForm = document.querySelector(".popup");
+function popupClosing() {
+   const popupCloseBtns = document.querySelectorAll(".popup-close");
+   popupCloseBtns.forEach(btn => btn.addEventListener('click', e => {
+      if(e.target.parentNode.dataset.form === "login") {
+         loginPopup.classList.remove('active');
+      } else {
+         popupForm.classList.remove('popup-active');
+      }
+   }))
+}
+
 
 // Rooms parsing
 const href = document.location.href;
@@ -118,10 +187,10 @@ function showRooms(room) {
 }
 
 function parseRooms(arr) {
-   type = lastPathSegment;
+   let type = lastPathSegment;
    if(type !== 'rooms.html'){
-      roomsArray = roomsArray.filter(room => {
-         return (room.type === `${type.substr(0, type.length - 5)}`)
+      arr = arr.filter(room => {
+         return (room.type === `${type.substr(0, type.length - 5)}`);
       })
    }
 
@@ -129,8 +198,9 @@ function parseRooms(arr) {
 
    const bookRoomBtns = document.querySelectorAll(".room__book");
    bookRoomBtns.forEach(btn => btn.addEventListener('click', e => {
-      const popupForm = document.querySelector(".booking__popup");
+
       popupForm.classList.add('popup-active');
+
       let selectedRoom = document.querySelector(".selected-room");
       selectedRoom.innerHTML = e.target.dataset.type;
 
@@ -166,8 +236,7 @@ function parseRooms(arr) {
       let diffDays;
       to_picker.on('set', function(event) {
          if (event.select) {
-            from_picker.set('max', to_picker.get('select'))
-            console.log();
+            from_picker.set('max', to_picker.get('select'));
          } else if ('clear' in event) {
             from_picker.set('max', false)
          }
@@ -188,9 +257,8 @@ function parseRooms(arr) {
 
       })
       //form submitting
-      const mainBookingForm = document.querySelector(".main-booking");
-      submitMainBookingForm = function(e) {
-         console.log(diffDays);
+      const mainBookingForm = document.querySelector(".rooms-booking");
+      function submitMainBookingForm (e) {
          e.preventDefault();
          let adultsCount = document.querySelector(".adult-count");
          adultsCount = adultsCount.options[adultsCount.selectedIndex].value;
@@ -214,30 +282,24 @@ function parseRooms(arr) {
        }
       mainBookingForm.addEventListener('submit', submitMainBookingForm);
 
-      const popupCloseBtn = document.querySelector(".booking__popup-close");
-      popupCloseBtn.addEventListener('click', () => {
-         popupForm.classList.remove('popup-active');
-      })
+      popupClosing();
    }))
 }
 
 const endpoint = 'http://localhost:3030/api/hotels';
-const promise = fetch(endpoint)
-    .then(res => {
-        if (!res.ok) {
-            throw new Error();
-        }
-        return res.json();
-    })
-    .then(data => {
-      data.forEach(room => {
-         roomsArray.push(room);
-         parseRooms(roomsArray);
-      })
+const promise = fetch(endpoint).then(res => {
+   if (!res.ok) {
+      throw new Error(res.statusText);
+   }
+   return res.json();
+}).then(data => {
+   data.forEach(room => {
+      roomsArray.push(room);
    })
-    .catch(error => {
-        // console.log(error);
-    });
+   parseRooms(roomsArray);
+}).catch(error => {
+   console.log(error);
+});
 
 // Sorting
 const sortRadios = document.querySelectorAll(".sort-radio");
