@@ -30,10 +30,10 @@ var config = {
     imgout: 'dist/img/',
     htmlout: 'dist/',
     scssout: 'src/css/',
-    cssoutname: 'styles.css',
-    jsoutname: 'script.js',
+    cssoutname: 'style.css',
+    jsoutname: 'main.js',
     cssreplaceout: 'css/style.css',
-    jsreplaceout: 'js/script.js'
+    jsreplaceout: 'js/main.js'
 };
 
 gulp.task('reload', function() {
@@ -61,7 +61,6 @@ gulp.task('sass', function() {
 
 gulp.task('css', function() {
     return gulp.src(config.cssin)
-      .pipe(concat(config.cssoutname))
       .pipe(cleanCSS())
       .pipe(gulp.dest(config.cssout));
 });

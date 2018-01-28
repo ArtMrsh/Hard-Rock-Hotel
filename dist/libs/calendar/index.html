@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="pikaday.css">
+</head>
+<body>
+	<input type="text" class="datepicker">
+	<input type="text" class="datepicker2">
+<script src="moment.js"></script>
+<script src="pikaday.js"></script>
+<script>
+var departureField = document.querySelector('.datepicker');
+var picker = new Pikaday({
+   field: document.querySelector('.datepicker'),
+   format: 'D MMM YYYY',
+   onSelect: function() {
+		 departureField.value = this.getMoment().format('D / MM / YYYY');
+   }
+});
+var arriveField = document.querySelector('.datepicker2');
+var picker2 = new Pikaday({
+   field: arriveField,
+   format: 'D MMM YYYY',
+   minDate: new Date(),
+   onSelect: function() {
+		 arriveField.value = this.getMoment().format('D / MM / YYYY');
+   }
+});
+</script>
+</script>
+</body>
+</html>
